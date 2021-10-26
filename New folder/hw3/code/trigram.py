@@ -148,8 +148,8 @@ def generate_sentence(word1, word2, length, vocab, model):
 def main():
     start_time = time.time()
     # TODO: Pre-process and vectorize the data using get_data from preprocess
-    test_dir = "C:\\Users\smy18\workspace2\dl\hw3-lm-syamamo1\data\\test.txt"
-    train_dir = "C:\\Users\smy18\workspace2\dl\hw3-lm-syamamo1\data\\train.txt"
+    test_dir = "C:\\Users\smy18\workspace2\dl\hw3-lm-syamamo1\hw3\data\\test.txt"
+    train_dir = "C:\\Users\smy18\workspace2\dl\hw3-lm-syamamo1\hw3\data\\train.txt"
     train_data, test_data, vocabulary = get_data(train_dir, test_dir)    
 
     # TO-DO:  Separate your train and test data into inputs and labels

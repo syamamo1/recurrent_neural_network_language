@@ -44,6 +44,6 @@ def get_data(train_file, test_file):
     # print('dict len:', len(word2id))
     return train_words, test_words, word2id
 
-# test_dir = "C:\\Users\smy18\workspace2\dl\hw3-lm-syamamo1\data\\test.txt"
-# train_dir = "C:\\Users\smy18\workspace2\dl\hw3-lm-syamamo1\data\\train.txt"
+# test_data = "C:\\Users\smy18\workspace2\dl\hw3-lm-syamamo1\hw3\data\\test.txt"
+# train_data = "C:\\Users\smy18\workspace2\dl\hw3-lm-syamamo1\hw3\data\\train.txt"
 # get_data(train_data, test_data)

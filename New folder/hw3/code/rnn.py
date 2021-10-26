@@ -181,8 +181,8 @@ def main():
     # HINT: Please note that you are predicting the next word at each timestep, so you want to remove the last element
     # from train_x and test_x. You also need to drop the first element from train_y and test_y.
     # If you don't do this, you will see impossibly small perplexities.
-    test_dir = "C:\\Users\smy18\workspace2\dl\hw3-lm-syamamo1\data\\test.txt"
-    train_dir = "C:\\Users\smy18\workspace2\dl\hw3-lm-syamamo1\data\\train.txt"
+    test_dir = "C:\\Users\smy18\workspace2\dl\hw3-lm-syamamo1\hw3\data\\test.txt"
+    train_dir = "C:\\Users\smy18\workspace2\dl\hw3-lm-syamamo1\hw3\data\\train.txt"
     train_data, test_data, vocabulary = get_data(train_dir, test_dir)   
     
     # TO-DO:  Separate your train and test data into inputs and labels
