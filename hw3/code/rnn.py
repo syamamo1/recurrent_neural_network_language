@@ -19,7 +19,7 @@ class Model(tf.keras.Model):
 
         self.vocab_size = vocab_size
         self.window_size = 20 # DO NOT CHANGE!
-        self.embedding_size = 50 #TODO
+        self.embedding_size = 256 #TODO
         self.batch_size = 64 #TODO 
 
         # TODO: initialize embeddings and forward pass weights (weights, biases)
@@ -28,10 +28,12 @@ class Model(tf.keras.Model):
         # - and use tf.keras.layers.GRU or tf.keras.layers.LSTM for your RNN 
         self.E = tf.Variable(tf.random.truncated_normal([self.vocab_size, self.embedding_size], stddev=.1))
 
-        self.rnn_layer = tf.keras.layers.LSTM(self.vocab_size, return_sequences=True, return_state=True)
-        self.linear_layer = tf.keras.layers.Dense(self.vocab_size, activation='relu')
+        self.rnn_layer = tf.keras.layers.LSTM(1028, return_sequences=True, return_state=True)
+        self.linear_layer1 = tf.keras.layers.Dense(512, activation='relu')
+        self.linear_layer2 = tf.keras.layers.Dense(self.vocab_size, activation='softmax')
 
         self.optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)
+
 
     def call(self, inputs, initial_state):
         """
@@ -49,11 +51,10 @@ class Model(tf.keras.Model):
         if initial_state is None:
             embedding = tf.nn.embedding_lookup(self.E, inputs) # embedding [batch_size, window_size, embedding_size] 
             whole_seq_output, final_memory_state, final_carry_state = self.rnn_layer(embedding) # whole_seq_output [batch_size, window_size, units]
-            logits = self.linear_layer(whole_seq_output) # logits [batch_size, window_size, units=vocab_size]
-            probs = tf.nn.softmax(logits) # probs [batch_size, vocab_size]
+            linear1output = self.linear_layer1(whole_seq_output) # probs [batch_size, window_size, units=vocab_size]
+            probs = self.linear_layer2(linear1output)
             return probs, (final_memory_state, final_carry_state)
             
-
 
     def loss(self, probs, labels):
         """
@@ -85,17 +86,19 @@ def train(model, train_inputs, train_labels):
     :return: None
     """
     #TODO: Fill in
+    start_time = time.time()
     real_inputs = []
     real_labels = []
-    for i in range(0, len(train_inputs)-model.window_size):
-        real_inputs.append(train_inputs[i:i+model.window_size])
-        real_labels.append(train_labels[i:i+model.window_size])
+    num_inputs = len(train_inputs)//model.window_size
+    for i in range(0, num_inputs):
+        real_inputs.append(train_inputs[i*model.window_size:(i+1)*model.window_size])
+        real_labels.append(train_labels[i*model.window_size:(i+1)*model.window_size])
 
     inds = tf.random.shuffle(range(len(real_labels)))
     shuffled_inputs = tf.gather(real_inputs, inds)
     shuffled_labels = tf.gather(real_labels, inds)
 
-    num_iterations = int(len(shuffled_labels)/model.batch_size)
+    num_iterations = len(shuffled_labels)//model.batch_size
     for i in range(0, num_iterations):
         inputs = shuffled_inputs[i*model.batch_size:(i+1)*model.batch_size]
         labels = shuffled_labels[i*model.batch_size:(i+1)*model.batch_size]
@@ -103,7 +106,7 @@ def train(model, train_inputs, train_labels):
         with tf.GradientTape() as tape:
             predictions, state = model.call(inputs, None)
             loss = model.loss(predictions, labels)
-            #print("{}% training steps complete: Loss: {}".format(round(100*i/num_iterations, 3), round(loss))
+            print("{}% training complete - Loss: {} - Train Time: {}".format(round(100*i/num_iterations, 3), loss, (time.time()-start_time)/60))
 
         gradients = tape.gradient(loss, model.trainable_variables)
         model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
@@ -125,12 +128,13 @@ def test(model, test_inputs, test_labels):
     #NOTE: Ensure a correct perplexity formula (different from raw loss)
     real_inputs = []
     real_labels = []
-    for i in range(0, len(test_inputs)-model.window_size):
-        real_inputs.append(test_inputs[i:i+model.window_size])
-        real_labels.append(test_labels[i:i+model.window_size])   
+    num_inputs = len(test_inputs)//model.window_size
+    for i in range(0, num_inputs):
+        real_inputs.append(test_inputs[i*model.window_size:(i+1)*model.window_size])
+        real_labels.append(test_labels[i*model.window_size:(i+1)*model.window_size])   
 
     total_loss = 0
-    num_iterations = int(len(real_labels)/model.batch_size)
+    num_iterations = len(real_labels)//model.batch_size
     for i in range(0, num_iterations):
         inputs = real_inputs[i*model.batch_size:(i+1)*model.batch_size]
         labels = real_labels[i*model.batch_size:(i+1)*model.batch_size]
@@ -202,13 +206,9 @@ def main():
     print('Perplexity:', perplexity)
 
     # BONUS: Try printing out various sentences with different start words and sample_n parameters 
-    # generate_sentence('famous', 'people', 5, vocabulary, mod)
-    # generate_sentence('i', 'like', 2, vocabulary, mod)
-    # generate_sentence('eat', 'my', 4, vocabulary, mod)
-    # generate_sentence('rhode', 'island', 5, vocabulary, mod)
     
-    #print('Runtime:', (time.time()-start_time)/60)
-    
+    print('Runtime:', (time.time()-start_time)/60)
+
     pass
 
 if __name__ == '__main__':

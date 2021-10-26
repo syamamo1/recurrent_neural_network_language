@@ -85,7 +85,7 @@ def train(model, train_input, train_labels):
         with tf.GradientTape() as tape:
             predictions = model(inputs)
             loss = model.loss_function(predictions, labels)
-            #print("Loss, {}% training steps complete: {}".format(round(100*i/num_iterations, 3), loss))
+            print("Loss, {}% training steps complete: {}".format(round(100*i/num_iterations, 3), loss))
 
         gradients = tape.gradient(loss, model.trainable_variables)
         model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
@@ -142,14 +142,14 @@ def generate_sentence(word1, word2, length, vocab, model):
             model(output_string[:, start:end]), axis=1)
     text = [reverse_vocab[i] for i in list(output_string[0])]
 
-    #print(" ".join(text))
+    print(" ".join(text))
 
 
 def main():
     start_time = time.time()
     # TODO: Pre-process and vectorize the data using get_data from preprocess
-    test_dir = "C:\\Users\smy18\workspace2\dl\hw3-lm-syamamo1\hw3\data\\test.txt"
-    train_dir = "C:\\Users\smy18\workspace2\dl\hw3-lm-syamamo1\hw3\data\\train.txt"
+    test_dir = "C:\\Users\smy18\workspace2\dl\hw3-lm-syamamo1\data\\test.txt"
+    train_dir = "C:\\Users\smy18\workspace2\dl\hw3-lm-syamamo1\data\\train.txt"
     train_data, test_data, vocabulary = get_data(train_dir, test_dir)    
 
     # TO-DO:  Separate your train and test data into inputs and labels
@@ -182,7 +182,7 @@ def main():
     generate_sentence('eat', 'my', 4, vocabulary, mod)
     generate_sentence('rhode', 'island', 5, vocabulary, mod)
     
-    #print('Runtime:', (time.time()-start_time)/60)
+    print('Runtime:', (time.time()-start_time)/60)
 
     pass
 

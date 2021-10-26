@@ -1,5 +1,9 @@
-Trigram and RNN batch_size = embedding_size = 128. 
-Trigram ~67 perplexity, 3:40 to train
-RNN ~__ perplexity, x:yz to train
+Trigram 
+batch_size = embedding_size = 128
+~67 perplexity, 3:40 to train
+
+RNN 
+batch_size = 64, embedding_size = 256
+~77 perplexity, 4:49 to train
 
 No known bugs or errors. 

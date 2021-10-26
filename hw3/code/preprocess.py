@@ -38,7 +38,7 @@ def get_data(train_file, test_file):
     for word in b:
         test_words.append(word2id[word])
 
-    # BONUS: Ensure that all words appearing in test also appear in train <-- No thanks
+    # BONUS: Ensure that all words appearing in test also appear in train <-- N
 
     # TODO: return tuple of training tokens, testing tokens, and the vocab dictionary.
     # print('dict len:', len(word2id))
@@ -46,4 +46,4 @@ def get_data(train_file, test_file):
 
 # test_dir = "C:\\Users\smy18\workspace2\dl\hw3-lm-syamamo1\data\\test.txt"
 # train_dir = "C:\\Users\smy18\workspace2\dl\hw3-lm-syamamo1\data\\train.txt"
-# get_data(train_data, test_data)
+# get_data(train_dir, test_dir)
